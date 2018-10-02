@@ -1,5 +1,4 @@
-# Member      : Vũ Minh Đức B
-#               Trương Huy Hùng
+# Member      : Vũ Minh Đức B - Trương Huy Hùng          
 
 # Trainer     : Lê Vũ Tấn Tuấn
 # Start date  : 02/10/2018
