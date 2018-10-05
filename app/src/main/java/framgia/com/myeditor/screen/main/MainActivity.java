@@ -15,42 +15,68 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import framgia.com.myeditor.R;
 import framgia.com.myeditor.databinding.ActivityMainBinding;
+import framgia.com.myeditor.screen.home.HomeFragment;
+import framgia.com.myeditor.utils.rx.SchedulerProvider;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ActivityMainBinding mHomeBinding;
+    private ActivityMainBinding mMainBinding;
+    private MainViewModel mMainViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(
                     ContextCompat.getColor(this, R.color.color_material_blue_400));
         }
-        mHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        init();
+    }
 
-        Toolbar toolbar = mHomeBinding.appbar.toolbar;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mMainViewModel.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mMainViewModel.onStop();
+        super.onStop();
+    }
+
+    private void init() {
+        initBinding();
+        initNavigation();
+    }
+
+    private void initBinding() {
+        mMainViewModel = new MainViewModel();
+        mMainViewModel.setSchedulerProvider(SchedulerProvider.getInstance());
+        mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mMainBinding.setViewModel(mMainViewModel);
+        mMainBinding.executePendingBindings();
+    }
+
+    private void initNavigation() {
+        Toolbar toolbar = mMainBinding.appbar.toolbar;
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = mHomeBinding.drawerLayout;
+        DrawerLayout drawer = mMainBinding.drawerLayout;
         ActionBarDrawerToggle toggle =
-                new ActionBarDrawerToggle(this, drawer, toolbar,
-                        R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
+                        R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = mHomeBinding.navView;
+        NavigationView navigationView = mMainBinding.navView;
         navigationView.setNavigationItemSelectedListener(this);
-
         displaySelectedScreen(R.id.nav_home);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = mHomeBinding.drawerLayout;
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -68,6 +94,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_search) {
+            //To do
         }
         return super.onOptionsItemSelected(item);
     }
@@ -82,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (itemId) {
             case R.id.nav_home:
+                fragment = HomeFragment.newInstance();
                 break;
             case R.id.nav_offline:
                 break;
@@ -93,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction().add(R.id.frame_main, fragment).commit();
         }
-        DrawerLayout drawer = mHomeBinding.drawerLayout;
+        DrawerLayout drawer = mMainBinding.drawerLayout;
         drawer.closeDrawer(GravityCompat.START);
     }
 }
