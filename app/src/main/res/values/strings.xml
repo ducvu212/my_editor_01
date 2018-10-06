@@ -9,4 +9,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_news">News</string>
     <string name="title_collection">Collection</string>
+    <string name="max_length_author">12</string>
+
 </resources>

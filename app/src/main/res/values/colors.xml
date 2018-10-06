@@ -3,7 +3,8 @@
     <color name="color_primary">#3F51B5</color>
     <color name="color_primary_dark">#303F9F</color>
     <color name="color_accent">#FF4081</color>
-    <color name="color_black">#0a0a0a</color>
+    <color name="color_black_alpha_255">#0a0a0a</color>
     <color name="color_white">#ffffff</color>
     <color name="color_material_blue_400">#8f8f97</color>
+    <color name="color_material_blue_400_alpha_48">#308f8f97</color>
 </resources>
