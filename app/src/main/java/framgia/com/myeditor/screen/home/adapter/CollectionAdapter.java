@@ -1,25 +1,35 @@
-package framgia.com.myeditor.screen.home;
+package framgia.com.myeditor.screen.home.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import framgia.com.myeditor.R;
+import framgia.com.myeditor.data.model.Collection;
 import framgia.com.myeditor.databinding.ItemColectionBinding;
+import framgia.com.myeditor.screen.home.HandleItemClick;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.CollectionHolder> {
-    private List<Collection> mListCollections;
+import static framgia.com.myeditor.screen.home.adapter.RandomPagerAdapter.NUMBER_ZERO;
 
-    CollectionAdapter() {
-        mListCollections = new ArrayList<>();
+public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.CollectionHolder> {
+
+    private Context mContext;
+    private FragmentManager mManager;
+    private List<Collection> mCollections;
+
+    public CollectionAdapter(Context context, FragmentManager manager) {
+        mContext = context;
+        mManager = manager;
+        mCollections = new ArrayList<>();
     }
 
-    void setListCollections(List<Collection> listCollections) {
-        mListCollections.addAll(
-                listCollections.subList(mListCollections.size(), listCollections.size()));
+    public void setCollections(List<Collection> collections) {
+        mCollections.addAll(collections.subList(mCollections.size(), collections.size()));
     }
 
     @NonNull
@@ -33,12 +43,12 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
 
     @Override
     public void onBindViewHolder(@NonNull CollectionHolder collectionHolder, int i) {
-        collectionHolder.binding(mListCollections.get(i));
+        collectionHolder.binding(mContext, mManager, mCollections.get(i));
     }
 
     @Override
     public int getItemCount() {
-        return mListCollections == null ? 0 : mListCollections.size();
+        return mCollections == null ? NUMBER_ZERO : mCollections.size();
     }
 
     static class CollectionHolder extends RecyclerView.ViewHolder {
@@ -49,8 +59,9 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
             mBinding = itemView;
         }
 
-        public void binding(Collection collection) {
+        public void binding(Context context, FragmentManager manager, Collection collection) {
             mBinding.setCollection(collection);
+            mBinding.setListener(new HandleItemClick(context, manager));
             mBinding.executePendingBindings();
         }
     }

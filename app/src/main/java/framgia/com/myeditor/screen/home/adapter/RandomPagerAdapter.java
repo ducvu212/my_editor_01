@@ -1,13 +1,15 @@
-package framgia.com.myeditor.screen.home;
+package framgia.com.myeditor.screen.home.adapter;
 
 import android.databinding.DataBindingUtil;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import framgia.com.myeditor.R;
+import framgia.com.myeditor.data.model.Image;
+import framgia.com.myeditor.data.model.ImageRandom;
 import framgia.com.myeditor.databinding.ItemRandomImageBinding;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +19,15 @@ import java.util.List;
  */
 public class RandomPagerAdapter extends PagerAdapter {
 
+    public static final int NUMBER_ZERO = 0;
+    public static final int NUMBER_ONE = 1;
     private List<Image> mRandomList;
 
-    RandomPagerAdapter() {
+    public RandomPagerAdapter() {
         mRandomList = new ArrayList<>();
     }
 
-    void setRandomList(List<Image> list) {
+    public void setRandomList(List<Image> list) {
         if (list.size() > 0) {
             mRandomList.clear();
             mRandomList.addAll(list);
@@ -36,17 +40,22 @@ public class RandomPagerAdapter extends PagerAdapter {
                 DataBindingUtil.inflate(LayoutInflater.from(container.getContext()),
                         R.layout.item_random_image, container, false);
         View view = binding.getRoot();
-        binding.setItem(
-                new ItemViewPager.Builder().mPath(mRandomList.get(position).getUrls().getFull())
-                        .build());
+        Image image = mRandomList.get(position);
+        binding.setItem(new ImageRandom.Builder().mPath(image.getUrls().getRegular())
+                .mLikeByUser(image.getLikedByUser() ? NUMBER_ONE : NUMBER_ZERO)
+                .mUserName(image.getUser().getUsername())
+                .mImageId(image.getId())
+                .mRawImage(image.getUrls().getRaw())
+                .mType(ImageType.REMOTE)
+                .build());
         ViewPager viewPager = (ViewPager) container;
-        viewPager.addView(view, 0);
+        viewPager.addView(view, NUMBER_ZERO);
         return view;
     }
 
     @Override
     public int getCount() {
-        return mRandomList == null ? 0 : mRandomList.size();
+        return mRandomList == null ? NUMBER_ZERO : mRandomList.size();
     }
 
     @Override

@@ -1,13 +1,20 @@
 package framgia.com.myeditor.screen.home;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import framgia.com.myeditor.R;
+import framgia.com.myeditor.data.repository.ImageRepository;
+import framgia.com.myeditor.data.source.local.ImageLocalDataSource;
+import framgia.com.myeditor.data.source.remote.ImageRemoteDataSource;
 import framgia.com.myeditor.databinding.FragmentHomeBinding;
 import framgia.com.myeditor.utils.rx.SchedulerProvider;
 
@@ -16,15 +23,27 @@ import framgia.com.myeditor.utils.rx.SchedulerProvider;
  */
 public class HomeFragment extends Fragment {
 
+    public static final String TAG = HomeFragment.class.getSimpleName();
+    private static HomeFragment sInstance;
+    private FragmentActivity mContext;
     private HomeViewModel mViewModel;
     private FragmentHomeBinding mBinding;
 
     public HomeFragment() {
-
+        // Required empty public constructor
     }
 
     public static HomeFragment newInstance() {
-        return new HomeFragment();
+        if (sInstance == null) {
+            sInstance = new HomeFragment();
+        }
+        return sInstance;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = (FragmentActivity) context;
     }
 
     @Override
@@ -36,9 +55,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void initBinding() {
-        mViewModel = new HomeViewModel(getContext(), mBinding.viewPagerImage,
+        ImageDatabase database = ImageDatabase.getInstance(mContext);
+        mViewModel = HomeViewModel(mContext, mBinding.viewPagerImage,
+                mContext.getSupportFragmentManager(),
                 new ImageRepository(ImageRemoteDataSource.getsInstance(),
-                        ImageLocalDataSource.getsInstance()));
+                        ImageLocalDataSource.getsInstance(database.mImageDAO(), mContext)));
         mViewModel.setSchedulerProvider(SchedulerProvider.getInstance());
         mBinding.setViewModel(mViewModel);
         initViews();
@@ -69,8 +90,18 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }
