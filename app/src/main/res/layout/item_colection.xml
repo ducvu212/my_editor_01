@@ -7,8 +7,12 @@
     <data>
 
         <variable
+            name="listener"
+            type="framgia.com.myeditor.screen.home.HandleItemClick"/>
+
+        <variable
             name="collection"
-            type="com.example.ducvu212.demomvvm.data.model.Collection"/>
+            type="framgia.com.myeditor.data.model.Collection"/>
 
     </data>
 
@@ -21,7 +25,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:onClick="@{() -> listener.OnItemCollectionClickListener(collection)}">
 
             <ImageView
                 android:id="@+id/image_collection"
