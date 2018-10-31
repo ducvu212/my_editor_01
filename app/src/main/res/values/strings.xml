@@ -10,5 +10,8 @@
     <string name="title_news">News</string>
     <string name="title_collection">Collection</string>
     <string name="max_length_author">12</string>
+    <string name="max_line_search">1</string>
+    <string name="search_span_count">3</string>
+    <string name="search_bias_collection">1.0</string>
 
 </resources>
