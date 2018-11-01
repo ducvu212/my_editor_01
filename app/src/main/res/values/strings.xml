@@ -13,5 +13,7 @@
     <string name="max_line_search">1</string>
     <string name="search_span_count">3</string>
     <string name="search_bias_collection">1.0</string>
+    <string name="edit_max_value">255</string>
+    <string name="edit_min_value">-255</string>
 
 </resources>
